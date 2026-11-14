@@ -156,18 +156,18 @@ namespace dojo.Core
         {
             if (player1 != null)
             {         
-                if (player1.x > Drawer.width)
+                if (player1.x > Drawer.width - 1)
                 {
-                    player1.x = Drawer.width;
+                    player1.x = Drawer.width -1;
                 }
                 else if (player1.x < 0)
                 {
                     player1.x = 0;
                 }
 
-                if (player1.y > Drawer.height)
+                if (player1.y > Drawer.height -1)
                 {
-                    player1.y = Drawer.height;
+                    player1.y = Drawer.height - 1;
                 }
                 else if (player1.y < 0)
                 {
@@ -177,18 +177,18 @@ namespace dojo.Core
 
             if (player2 != null)
             {           
-                if (player2.x > Drawer.width)
+                if (player2.x > Drawer.width - 1)
                 {
-                    player2.x = Drawer.width;
+                    player2.x = Drawer.width - 1;
                 }
                 else if (player2.x < 0)
                 {
                     player2.x = 0;
                 }
 
-                if (player2.y > Drawer.height)
+                if (player2.y > Drawer.height - 1)
                 {
-                    player2.y = Drawer.height;
+                    player2.y = Drawer.height - 1;
                 }
                 else if (player2.y < 0)
                 {

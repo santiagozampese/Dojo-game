@@ -13,6 +13,7 @@ namespace dojo.API
         public Player? otherPlayer {get; private set;}
         public int health { get; set; } = 100;
         public int damage { get; set; } = 10;
+        public char direction { get; set; } = 'u';
         public int x {get; set;}
         public int y {get; set;}
         public char Apparence {get; set;} = '@';
@@ -81,6 +82,7 @@ namespace dojo.API
             if (y > 0)
             {
                 y--;
+                direction = 'u';
             }
         }
         public void Down()
@@ -88,6 +90,7 @@ namespace dojo.API
             if (y + 1 < Context.MapHeight)
             {
                 y++;
+                direction = 'd';
             }
         }
         public void Right()
@@ -95,6 +98,7 @@ namespace dojo.API
             if (x + 1 < Context.MapWidth)
             {
                 x++;
+                direction = 'r';
             }
         }
         public void Left()
@@ -102,6 +106,7 @@ namespace dojo.API
             if (x > 0)
             {
                 x--;
+                direction = 'l';
             }
         }
     }
