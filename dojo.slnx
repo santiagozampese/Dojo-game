@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="dojo.API/dojo.API.csproj" />
+  <Project Path="dojo.BaseContent/dojo.BaseContent.csproj" />
+  <Project Path="dojo.Terminal/dojo.Terminal.csproj" />
+</Solution>
