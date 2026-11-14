@@ -78,47 +78,63 @@ namespace dojo.Core
         }
         private static void StartGame()
         {
-
-            var context = new GameContext();
-
-            context.Player1 = player1;
-            context.Player2 = player2;
-
-            player1!.SetContext(context);
-            player2!.SetContext(context);
-
-            player1!.Config();
-            player2!.Config();
-
-            input += Player1Input;
-            input += Player2Input;
-
             var cts = new CancellationTokenSource();
-            var drawThread = new Thread(() => DrawThread(cts.Token));
-            drawThread.Start();
+            Thread? drawThread = null;
+            try
+            {          
+                var context = new GameContext();
 
-            while (true)
-            {           
-                Drawer.Draw();
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                input.Invoke(null, new InputEventArgs() { key = keyInfo.Key });
+                context.Player1 = player1;
+                context.Player2 = player2;
 
-                if (player1.health <= 0)
+                player1!.SetContext(context);
+                player2!.SetContext(context);
+
+                player1!.Config();
+                player2!.Config();
+
+                input += Player1Input;
+                input += Player2Input;
+
+                drawThread = new Thread(() => DrawThread(cts.Token));
+                drawThread.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error initializing game: {e.Message}");
+                Environment.Exit(1);
+            }
+
+            while (true) // Gameloop
+            {
+                try
                 {
-                    cts.Cancel();
-                    Console.Clear();
-                    string type = Program.player2!.GetType().ToString().Split(".").Last();
-                    Console.WriteLine($"Player 2 ({type}) wins!");
-                    break;
+                    
+                    Drawer.Draw();
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                    input!.Invoke(null, new InputEventArgs() { key = keyInfo.Key });
+
+                    if (player1!.health <= 0)
+                    {
+                        cts.Cancel();
+                        Console.Clear();
+                        Console.WriteLine($"Player 2 ({player2.Name}) wins!");
+                        break;
+                    }
+                    if (player2!.health <= 0)
+                    {
+                        cts.Cancel();
+                        Console.Clear();
+                        string type = Program.player1!.GetType().ToString().Split(".").Last();
+                        Console.WriteLine($"Player 1 ({player1.Name}) wins!");
+                        break;
+                    }
+                    CorrectPositions();               
                 }
-                if (player2.health <= 0)
+                catch (Exception e)
                 {
-                    cts.Cancel();
-                    drawThread.Interrupt();
-                    Console.Clear();
-                    string type = Program.player1!.GetType().ToString().Split(".").Last();
-                    Console.WriteLine($"Player 1 ({type}) wins!");
-                    break;
+                    Console.WriteLine($"Error in gameloop: {e.Message}");
+                    Environment.Exit(1);
                 }
             }
         }
@@ -134,6 +150,51 @@ namespace dojo.Core
                 }
             }
             catch{}
+        }
+
+        private static void CorrectPositions()
+        {
+            if (player1 != null)
+            {         
+                if (player1.x > Drawer.width)
+                {
+                    player1.x = Drawer.width;
+                }
+                else if (player1.x < 0)
+                {
+                    player1.x = 0;
+                }
+
+                if (player1.y > Drawer.height)
+                {
+                    player1.y = Drawer.height;
+                }
+                else if (player1.y < 0)
+                {
+                    player1.y = 0;
+                }
+            }
+
+            if (player2 != null)
+            {           
+                if (player2.x > Drawer.width)
+                {
+                    player2.x = Drawer.width;
+                }
+                else if (player2.x < 0)
+                {
+                    player2.x = 0;
+                }
+
+                if (player2.y > Drawer.height)
+                {
+                    player2.y = Drawer.height;
+                }
+                else if (player2.y < 0)
+                {
+                    player2.y = 0;
+                }
+            }
         }
 
         private static void Player1Input(object? sender, InputEventArgs e)

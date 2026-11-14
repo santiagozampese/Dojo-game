@@ -8,8 +8,9 @@ namespace dojo.API
         public TimeSpan habilityCooldown = TimeSpan.FromSeconds(5);
         public DateTime lastAttack = DateTime.MinValue;
         public TimeSpan attackCooldown = TimeSpan.FromSeconds(1);
+        public string Name {get; set;} = "";
         public int playerNumber = 0;
-        public Player? otherPlayer;
+        public Player? otherPlayer {get; private set;}
         public int health { get; set; } = 100;
         public int damage { get; set; } = 10;
         public int x {get; set;}
@@ -47,7 +48,7 @@ namespace dojo.API
             return false;
         }
 
-        public void Config()
+        public virtual void Config()
         {
             if (playerNumber == 2)
             {
