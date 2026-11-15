@@ -3,7 +3,7 @@ namespace dojo.BaseContent
 {
     public class Mage : Player
     {
-        public Mage(int number) : base(number)
+        public Mage()
         {
             health = 80;
             damage = 8;

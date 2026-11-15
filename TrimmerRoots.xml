@@ -1,0 +1,5 @@
+<linker>
+    <assembly fullname="dojo">
+        <namespace fullname="dojo.API" preserve="all" />
+    </assembly>
+</linker>

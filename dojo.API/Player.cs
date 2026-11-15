@@ -51,6 +51,7 @@ namespace dojo.API
 
         public virtual void Config()
         {
+            OnHit = null;
             if (playerNumber == 2)
             {
                 otherPlayer = Context.Player1;
@@ -65,16 +66,15 @@ namespace dojo.API
             {
                 color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
             }
-        }
-        public Player(int number)
-        {
-            playerNumber = number;
 
             OnHit += (sender, e) =>
             {
                 if (e.attacker == null) return;
                 health -= e.damage;
             };
+        }
+        public Player()
+        {
         }
 
         public void Up()

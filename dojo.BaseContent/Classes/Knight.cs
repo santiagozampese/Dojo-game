@@ -3,7 +3,7 @@ namespace dojo.BaseContent
 {
     public class Knight : Player
     {   
-        public Knight(int number) : base(number)
+        public Knight()
         {
             habilityCooldown = TimeSpan.FromSeconds(6);
         }

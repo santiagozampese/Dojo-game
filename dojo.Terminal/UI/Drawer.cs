@@ -38,8 +38,11 @@ public static class Drawer
         int cooldown1 = (Program.player1!.habilityCooldown - (DateTime.Now - Program.player1!.lastUseHability)).Seconds + 1;
         int cooldown2 = (Program.player2!.habilityCooldown - (DateTime.Now - Program.player2!.lastUseHability)).Seconds + 1;
 
-        Console.WriteLine($"P1 ({Program.player1.Name}) Health: " + Program.player1!.health + $" Cooldown: { (DateTime.Now - Program.player1.lastUseHability > Program.player1.habilityCooldown ? "Ready" : $"{cooldown1}")}");
-        Console.WriteLine($"P2 ({Program.player2.Name}) Health: " + Program.player2!.health + $" Cooldown: { (DateTime.Now - Program.player2.lastUseHability > Program.player2.habilityCooldown ? "Ready" : $"{cooldown2}")}");
+        var cooldownText1 = $" Cooldown: { (DateTime.Now - Program.player1.lastUseHability > Program.player1.habilityCooldown ? "Ready" : $"{cooldown1}")}";
+        var cooldownText2 = $" Cooldown: { (DateTime.Now - Program.player2.lastUseHability > Program.player2.habilityCooldown ? "Ready" : $"{cooldown2}")}";
+
+        Console.WriteLine($"P1 ({Program.player1.Name}) H: {Program.player1!.health} D: {Program.player1!.damage} {cooldownText1}");
+        Console.WriteLine($"P2 ({Program.player2.Name}) H: {Program.player2!.health} D: {Program.player2!.damage} {cooldownText2}");
     }
 
     private static string VerifyPosition(int x, int y)

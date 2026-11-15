@@ -1,10 +1,14 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.Loader;
 using dojo.API;
 
 namespace dojo.Core
 {
     public static class DllLoader
     {    
+        [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "DLLs mods are extern and are not trimmed")]
+        [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "mod types are preserved in extern DLL")]
         public static List<ClassReference> LoadMods(string dir)
         {
             var findedClasses = new List<ClassReference>();
@@ -19,7 +23,8 @@ namespace dojo.Core
             {
                 try
                 {
-                    Assembly assemblyMod = Assembly.LoadFrom(pathDll);
+                    var context = new AssemblyLoadContext(Path.GetFileNameWithoutExtension(pathDll));
+                    Assembly assemblyMod = context.LoadFromAssemblyPath(Path.GetFullPath(pathDll));
 
                     foreach (Type type in assemblyMod.GetExportedTypes())
                     {
@@ -36,6 +41,7 @@ namespace dojo.Core
                 catch (Exception e)
                 {
                     Console.WriteLine($"Error to load mod {Path.GetFileName(pathDll)}: {e.Message}");
+                    Environment.Exit(1);
                 }
             }
             

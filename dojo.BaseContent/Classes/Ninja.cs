@@ -3,7 +3,7 @@ namespace modNinja;
 
 public class Ninja : Player
 {
-   public Ninja(int number) : base(number)
+   public Ninja()
    {
       habilityCooldown = TimeSpan.FromSeconds(8);
    }

@@ -84,65 +84,73 @@ namespace dojo.Core
         }
         private static void PreGame()
         {
-            string classesText = "";
-            int i = 1;
-            foreach (var c in ClassRegistry.classes)
-            {
-                classesText += $"{i}) {c.Name}\n";
-                i++;
+            try
+            {        
+                string classesText = "";
+                int i = 1;
+                foreach (var c in ClassRegistry.classes)
+                {
+                    classesText += $"{i}) {c.Name}\n";
+                    i++;
+                }
+                
+                int choice = 0;
+
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine($"""
+                    {ConsoleHelper.Blue}P1 Class:
+                    {classesText}{ConsoleHelper.ResetColor}
+                    """);
+
+                    Console.Write("\nChoice: ");
+                    if (int.TryParse(Console.ReadLine(), out choice))
+                    {
+                        Math.Max(choice, ClassRegistry.classes.Count);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                while (choice < 1 || choice - 1 > ClassRegistry.classes.Count);
+
+                player1 = ClassRegistry.classes[choice - 1].Intantiate(1);
+                player1.x = 5;
+                player1.y = 5;
+
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine($"""
+                    {ConsoleHelper.Red}P2 Class:
+                    {classesText}{ConsoleHelper.ResetColor}
+                    """);
+
+                    Console.Write("\nChoice: ");
+                    if (int.TryParse(Console.ReadLine(), out choice))
+                    {
+                        Math.Max(choice, ClassRegistry.classes.Count);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                while (choice < 1 || choice - 1 > ClassRegistry.classes.Count);
+
+                player2 = ClassRegistry.classes[choice - 1].Intantiate(2);
+                player2.x = 25;
+                player2.y = 10;
+
+                Console.CursorVisible = false;
             }
-            
-            int choice = 0;
-
-            do
+            catch (Exception e)
             {
-                Console.Clear();
-                Console.WriteLine($"""
-                {ConsoleHelper.Blue}P1 Class:
-                {classesText}{ConsoleHelper.ResetColor}
-                """);
-
-                Console.Write("\nChoice: ");
-                if (int.TryParse(Console.ReadLine(), out choice))
-                {
-                    Math.Max(choice, ClassRegistry.classes.Count);
-                }
-                else
-                {
-                    continue;
-                }
+                Console.WriteLine($"Error in pregame: {e.Message}");
+                Environment.Exit(1);
             }
-            while (choice < 1 || choice - 1 > ClassRegistry.classes.Count);
-
-            player1 = ClassRegistry.classes[choice - 1].Intantiate(1);
-            player1.x = 5;
-            player1.y = 5;
-
-            do
-            {
-                Console.Clear();
-                Console.WriteLine($"""
-                {ConsoleHelper.Red}P2 Class:
-                {classesText}{ConsoleHelper.ResetColor}
-                """);
-
-                Console.Write("\nChoice: ");
-                if (int.TryParse(Console.ReadLine(), out choice))
-                {
-                    Math.Max(choice, ClassRegistry.classes.Count);
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            while (choice < 1 || choice - 1 > ClassRegistry.classes.Count);
-
-            player2 = ClassRegistry.classes[choice - 1].Intantiate(2);
-            player2.x = 25;
-            player2.y = 10;
-
-            Console.CursorVisible = false;
             StartGame();
         }
         private static void StartGame()
@@ -162,6 +170,8 @@ namespace dojo.Core
                 player1!.Config();
                 player2!.Config();
 
+                input = null;
+                
                 input += Player1Input;
                 input += Player2Input;
 
@@ -187,15 +197,18 @@ namespace dojo.Core
                     {
                         cts.Cancel();
                         Console.Clear();
-                        Console.WriteLine($"Player 2 ({player2.Name}) wins!");
+                        Console.WriteLine($"{ConsoleHelper.Red}Player 2 ({player2.Name}) wins!{ConsoleHelper.ResetColor}");
+                        Console.WriteLine("Press enter to go back to menu...");
+                        Console.ReadLine();
                         break;
                     }
                     if (player2!.health <= 0)
                     {
                         cts.Cancel();
                         Console.Clear();
-                        string type = Program.player1!.GetType().ToString().Split(".").Last();
-                        Console.WriteLine($"Player 1 ({player1.Name}) wins!");
+                        Console.WriteLine($"{ConsoleHelper.Blue}Player 1 ({player1.Name}) wins!{ConsoleHelper.ResetColor}");
+                        Console.WriteLine("Press enter to go back to menu...");
+                        Console.ReadLine();
                         break;
                     }
                     CorrectPositions();               
@@ -314,10 +327,10 @@ namespace dojo.Core
                 case ConsoleKey.L:
                     player2.Right();
                     break;
-                case ConsoleKey.Enter:
+                case ConsoleKey.D0:
                     if (Functions.CanAttack(player2, player1!, 1, 1))
                     {     
-                    player2.Attack();
+                        player2.Attack();
                     }
                     break;
                 case ConsoleKey.O:

@@ -17,7 +17,8 @@ namespace dojo.API
         }
         public Player Intantiate(int playerNumber)
         {
-            Player player = (Player)Activator.CreateInstance(_playerType!, playerNumber)!;
+            Player player = (Player)Activator.CreateInstance(_playerType!)!;
+            player.playerNumber = playerNumber;
             player.Name = Name;
             return player;
         }
