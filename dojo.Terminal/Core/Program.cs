@@ -9,6 +9,8 @@ namespace dojo.Core
         public static event EventHandler<InputEventArgs>? input;
         public static void Main(string[] args)
         {
+            Console.CancelKeyPress += (object? sender, ConsoleCancelEventArgs e) => Console.CursorVisible = true;
+            
             ClassesManager.Init();
             var modClasses = DllLoader.LoadMods("mods");
             foreach (var c in modClasses)
@@ -16,6 +18,72 @@ namespace dojo.Core
                 ClassRegistry.AddClass(c);
             }
 
+            while (true)
+            {
+                try
+                {
+                    Console.CursorVisible = true;
+                    Console.Clear();
+                    Console.WriteLine("""
+                    1) Play
+                    2) Class Help
+                    """);
+
+                    Console.Write("Choice: ");
+                    int choice;
+
+                    do
+                    {
+                        if (int.TryParse(Console.ReadLine(), out choice))
+                        {
+                            Math.Max(choice, 2);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    while (choice < 0 || choice > 2);
+
+                    switch (choice)
+                    {
+                        case 1:
+                            PreGame();
+                            break;
+                        case 2:
+                            Help();
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Error in menu: {e.Message}");
+                }
+            }
+        }
+        private static void Help()
+        {
+            Console.Clear();
+            string text = "";
+            var color = ConsoleHelper.Blue;
+            foreach (var c in ClassRegistry.classes)
+            {     
+                text += $"{color}{c.Name}) {c.Description}{ConsoleHelper.ResetColor}\n";
+                if (color == ConsoleHelper.Blue)
+                {
+                    color = ConsoleHelper.Red;
+                }
+                else
+                {
+                    color = ConsoleHelper.Blue;
+                }
+            }
+            Console.WriteLine(text);
+            Console.WriteLine($"\nPress any key to back.");
+            Console.ReadKey();
+        }
+        private static void PreGame()
+        {
             string classesText = "";
             int i = 1;
             foreach (var c in ClassRegistry.classes)
@@ -74,6 +142,7 @@ namespace dojo.Core
             player2.x = 25;
             player2.y = 10;
 
+            Console.CursorVisible = false;
             StartGame();
         }
         private static void StartGame()

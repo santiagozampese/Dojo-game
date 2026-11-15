@@ -11,7 +11,7 @@ namespace dojo.BaseContent
         }
         public override void Hability()
         {
-            if (Functions.CanAttack(this, otherPlayer!, 15, 10, false))
+            if (Functions.CanAttack(this, otherPlayer!, 12, 12, false))
             {    
                 otherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { damage = damage, attacker = this });
             }
