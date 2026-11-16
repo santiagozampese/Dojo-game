@@ -51,27 +51,33 @@ namespace dojo.API
 
         public virtual void Config()
         {
-            OnHit = null;
-            if (playerNumber == 2)
+            try
             {
-                otherPlayer = Context.Player1;
-            }
-            else if (playerNumber == 1)
-            {
-                otherPlayer = Context.Player2;
-            }
+               if (playerNumber == 2)
+               {
+                   otherPlayer = Context.Player1;
+               }
+               else if (playerNumber == 1)
+               {
+                   otherPlayer = Context.Player2;
+               }
 
-            color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
-            while (color == otherPlayer!.color)
-            {
-                color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
-            }
+               color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
+               while (color == otherPlayer!.color)
+               {
+                   color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
+               }
 
-            OnHit += (sender, e) =>
+               OnHit += (sender, e) =>
+               {
+                   if (e.attacker == null) return;
+                   health -= e.damage;
+               };
+            }
+            catch (Exception e)
             {
-                if (e.attacker == null) return;
-                health -= e.damage;
-            };
+               Console.WriteLine($"Error in player {playerNumber} config: {e.Message}");
+            }
         }
         public Player()
         {

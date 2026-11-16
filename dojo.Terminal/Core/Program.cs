@@ -96,6 +96,9 @@ namespace dojo.Core
                 
                 int choice = 0;
 
+                player1 = null;
+                player2 = null;
+
                 do
                 {
                     Console.Clear();
@@ -114,7 +117,7 @@ namespace dojo.Core
                         continue;
                     }
                 }
-                while (choice < 1 || choice - 1 > ClassRegistry.classes.Count);
+                while (choice < 1 || choice > ClassRegistry.classes.Count);
 
                 player1 = ClassRegistry.classes[choice - 1].Intantiate(1);
                 player1.x = 5;
@@ -138,7 +141,7 @@ namespace dojo.Core
                         continue;
                     }
                 }
-                while (choice < 1 || choice - 1 > ClassRegistry.classes.Count);
+                while (choice < 1 || choice > ClassRegistry.classes.Count);
 
                 player2 = ClassRegistry.classes[choice - 1].Intantiate(2);
                 player2.x = 25;
