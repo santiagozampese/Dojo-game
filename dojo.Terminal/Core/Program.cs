@@ -7,6 +7,7 @@ namespace dojo.Core
         public static Player? player1;
         public static Player? player2;
         public static event EventHandler<InputEventArgs>? input;
+        public static List<Modpack> modpacks = new();
         public static void Main(string[] args)
         {
             Console.CancelKeyPress += (object? sender, ConsoleCancelEventArgs e) => Console.CursorVisible = true;
@@ -66,7 +67,13 @@ namespace dojo.Core
             Console.Clear();
             string text = "";
             var color = ConsoleHelper.Blue;
-            foreach (var c in ClassRegistry.classes)
+
+            List<ClassReference> mods = new();
+            foreach (var modpack in modpacks)
+            {
+                mods = mods!.Concat(modpack.Mods).ToList();
+            }
+            foreach (var c in ClassRegistry.classes.Concat(mods!))
             {     
                 text += $"{color}{c.Name}) {c.Description}{ConsoleHelper.ResetColor}\n";
                 if (color == ConsoleHelper.Blue)
@@ -82,69 +89,88 @@ namespace dojo.Core
             Console.WriteLine($"\nPress any key to back.");
             Console.ReadKey();
         }
+        private static Player? Choose(List<ClassReference> classes, int playerNumber, bool showModPacks = true, Modpack? modpack = null)
+        {
+            string classesText = "";
+            int i = 1;
+            foreach (var c in classes)
+            {
+                classesText += $"{i}) {c.Name}\n";
+                i++;
+            }
+
+            if (showModPacks)
+            {      
+                foreach (var mp in modpacks)
+                {
+                    classesText += $"{ConsoleHelper.Yellow}{i}) {mp.Name}{ConsoleHelper.ResetColor}\n";
+                    i++;
+                }
+            }
+            int choice = 0;
+
+            do
+            {
+                var color = playerNumber == 1 ? ConsoleHelper.Blue : ConsoleHelper.Red;
+                string modPackText = "";
+                if (modpack != null)
+                {
+                    modPackText = modpack.Name + "\n";
+                }
+                Console.Clear();
+                Console.WriteLine($"""
+                {color}P{playerNumber} Class:
+                {ConsoleHelper.Yellow}{modPackText}{color}{classesText}{ConsoleHelper.ResetColor}
+                """);
+
+                if (!showModPacks)
+                {
+                    Console.WriteLine("\nType 'x' to back.");
+                }
+                else
+                {
+                    Console.WriteLine();
+                }
+                Console.Write("Choice: ");
+                var line = Console.ReadLine();
+                if (line!.Trim().ToLower() == "x" && showModPacks == false)
+                {
+                    return null;
+                }
+                if (int.TryParse(line, out choice))
+                {
+                    Math.Max(choice, classes.Count + modpacks.Count);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            while (choice < 1 || choice > classes.Count + modpacks.Count);
+
+            if (choice > classes.Count)
+            {
+                var modPack = modpacks[choice - classes.Count - 1];
+                var p = Choose(modPack.Mods, playerNumber, false, modPack);
+                if (p != null)
+                {
+                    return p;
+                }
+                return Choose(classes, playerNumber);
+            }
+            return classes[choice - 1].Instantiate(playerNumber);
+        }
         private static void PreGame()
         {
             try
             {        
-                string classesText = "";
-                int i = 1;
-                foreach (var c in ClassRegistry.classes)
-                {
-                    classesText += $"{i}) {c.Name}\n";
-                    i++;
-                }
-                
-                int choice = 0;
+                player1 = Choose(ClassRegistry.classes.ToList(), 1);
+                player2 = Choose(ClassRegistry.classes.ToList(), 2);
 
-                player1 = null;
-                player2 = null;
-
-                do
-                {
-                    Console.Clear();
-                    Console.WriteLine($"""
-                    {ConsoleHelper.Blue}P1 Class:
-                    {classesText}{ConsoleHelper.ResetColor}
-                    """);
-
-                    Console.Write("\nChoice: ");
-                    if (int.TryParse(Console.ReadLine(), out choice))
-                    {
-                        Math.Max(choice, ClassRegistry.classes.Count);
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                while (choice < 1 || choice > ClassRegistry.classes.Count);
-
-                player1 = ClassRegistry.classes[choice - 1].Intantiate(1);
-                player1.x = 5;
+                player1!.x = 5;
                 player1.y = 5;
 
-                do
-                {
-                    Console.Clear();
-                    Console.WriteLine($"""
-                    {ConsoleHelper.Red}P2 Class:
-                    {classesText}{ConsoleHelper.ResetColor}
-                    """);
-
-                    Console.Write("\nChoice: ");
-                    if (int.TryParse(Console.ReadLine(), out choice))
-                    {
-                        Math.Max(choice, ClassRegistry.classes.Count);
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                while (choice < 1 || choice > ClassRegistry.classes.Count);
-
-                player2 = ClassRegistry.classes[choice - 1].Intantiate(2);
-                player2.x = 25;
+                player2!.x = 25;
                 player2.y = 10;
 
                 Console.CursorVisible = false;
@@ -330,7 +356,7 @@ namespace dojo.Core
                 case ConsoleKey.L:
                     player2.Right();
                     break;
-                case ConsoleKey.D0:
+                case ConsoleKey.P:
                     if (Functions.CanAttack(player2, player1!, 1, 1))
                     {     
                         player2.Attack();

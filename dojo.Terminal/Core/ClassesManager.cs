@@ -1,6 +1,6 @@
 using dojo.API;
 using dojo.BaseContent;
-using modNinja;
+
 
 namespace dojo.Core
 {
