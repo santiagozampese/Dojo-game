@@ -1,5 +1,5 @@
 ﻿using dojo.API;
-namespace modNinja;
+namespace dojo.BaseContent;
 
 public class Ninja : Player
 {

@@ -21,7 +21,8 @@ namespace dojo.Core
             {
                 foreach (var d in Directory.GetDirectories(dir))
                 {
-                    if (Directory.GetFiles(d).Length > 0)
+                    string[] modpackDlls = Directory.GetFiles(d, "*.dll");
+                    if (modpackDlls.Length > 0)
                     {   
                         var modPack = new Modpack();  
                         modPack.Name = Path.GetFileNameWithoutExtension(d);              
@@ -33,7 +34,6 @@ namespace dojo.Core
             }
 
             string[] filesDll = Directory.GetFiles(dir, "*.dll");
-
             foreach (string pathDll in filesDll)
             {
                 try

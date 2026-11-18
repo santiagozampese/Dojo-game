@@ -68,12 +68,7 @@ namespace dojo.Core
             string text = "";
             var color = ConsoleHelper.Blue;
 
-            List<ClassReference> mods = new();
-            foreach (var modpack in modpacks)
-            {
-                mods = mods!.Concat(modpack.Mods).ToList();
-            }
-            foreach (var c in ClassRegistry.classes.Concat(mods!))
+            foreach (var c in ClassRegistry.classes)
             {     
                 text += $"{color}{c.Name}) {c.Description}{ConsoleHelper.ResetColor}\n";
                 if (color == ConsoleHelper.Blue)
@@ -85,9 +80,38 @@ namespace dojo.Core
                     color = ConsoleHelper.Blue;
                 }
             }
+            int i = 1;
+            foreach (var modpack in modpacks)
+            {
+                text += $"{ConsoleHelper.Yellow}{i}) {modpack.Name}{ConsoleHelper.ResetColor}";
+                i++;
+            }
             Console.WriteLine(text);
-            Console.WriteLine($"\nPress any key to back.");
-            Console.ReadKey();
+            Console.WriteLine("\nTo see modpack help, press the corresponding number");
+            Console.WriteLine($"Press enter to go back.");
+            var line = Console.ReadLine();
+            int choice;
+            if (int.TryParse(line, out choice))
+            {
+                Console.Clear();
+                text = "";
+                foreach (var mod in modpacks[choice - 1].Mods)
+                {
+                    text += $"{color}{mod.Name}) {mod.Description}{ConsoleHelper.ResetColor}\n";
+                    if (color == ConsoleHelper.Blue)
+                    {
+                        color = ConsoleHelper.Red;
+                    }
+                    else
+                    {
+                        color = ConsoleHelper.Blue;
+                    }
+                }
+                Console.WriteLine(text);
+                Console.WriteLine($"Press enter to go back.");
+                Console.ReadLine();
+                Help();
+            }
         }
         private static Player? Choose(List<ClassReference> classes, int playerNumber, bool showModPacks = true, Modpack? modpack = null)
         {
