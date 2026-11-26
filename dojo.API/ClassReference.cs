@@ -18,7 +18,7 @@ namespace dojo.API
         public Player Instantiate(int playerNumber)
         {
             Player player = (Player)Activator.CreateInstance(_playerType!)!;
-            player.playerNumber = playerNumber;
+            player.PlayerNumber = playerNumber;
             player.Name = Name;
             return player;
         }

@@ -30,7 +30,7 @@ namespace dojo.Core
                     2) Class Help
                     """);
 
-                    Console.Write("Choice: ");
+                    Console.Write("\nChoice: ");
                     int choice;
 
                     do
@@ -83,7 +83,7 @@ namespace dojo.Core
             int i = 1;
             foreach (var modpack in modpacks)
             {
-                text += $"{ConsoleHelper.Yellow}{i}) {modpack.Name}{ConsoleHelper.ResetColor}";
+                text += $"{ConsoleHelper.Yellow}📦 {i}) {modpack.Name}{ConsoleHelper.ResetColor}";
                 i++;
             }
             Console.WriteLine(text);
@@ -94,8 +94,9 @@ namespace dojo.Core
             if (int.TryParse(line, out choice))
             {
                 Console.Clear();
-                text = "";
-                foreach (var mod in modpacks[choice - 1].Mods)
+                var modpack = modpacks[choice - 1];
+                text = $"{ConsoleHelper.Yellow}📦🔓 {modpack.Name}{ConsoleHelper.ResetColor}\n\n";
+                foreach (var mod in modpack.Mods)
                 {
                     text += $"{color}{mod.Name}) {mod.Description}{ConsoleHelper.ResetColor}\n";
                     if (color == ConsoleHelper.Blue)
@@ -127,7 +128,7 @@ namespace dojo.Core
             {      
                 foreach (var mp in modpacks)
                 {
-                    classesText += $"{ConsoleHelper.Yellow}{i}) {mp.Name}{ConsoleHelper.ResetColor}\n";
+                    classesText += $"{ConsoleHelper.Yellow}📦 {i}) {mp.Name}{ConsoleHelper.ResetColor}\n";
                     i++;
                 }
             }
@@ -139,7 +140,7 @@ namespace dojo.Core
                 string modPackText = "";
                 if (modpack != null)
                 {
-                    modPackText = modpack.Name + "\n";
+                    modPackText = "📦🔓 " + modpack.Name + "\n";
                 }
                 Console.Clear();
                 Console.WriteLine($"""
@@ -155,7 +156,7 @@ namespace dojo.Core
                 {
                     Console.WriteLine();
                 }
-                Console.Write("Choice: ");
+                Console.Write("\nChoice: ");
                 var line = Console.ReadLine();
                 if (line!.Trim().ToLower() == "x" && showModPacks == false)
                 {
@@ -246,7 +247,7 @@ namespace dojo.Core
                     ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                     input!.Invoke(null, new InputEventArgs() { key = keyInfo.Key });
 
-                    if (player1!.health <= 0)
+                    if (player1!.Health <= 0)
                     {
                         cts.Cancel();
                         Console.Clear();
@@ -255,7 +256,7 @@ namespace dojo.Core
                         Console.ReadLine();
                         break;
                     }
-                    if (player2!.health <= 0)
+                    if (player2!.Health <= 0)
                     {
                         cts.Cancel();
                         Console.Clear();

@@ -35,25 +35,25 @@ public static class Drawer
         Console.Write(drawable.ToString());
 
         Console.SetCursorPosition(0, height + 3);
-        int cooldown1 = (Program.player1!.habilityCooldown - (DateTime.Now - Program.player1!.lastUseHability)).Seconds + 1;
-        int cooldown2 = (Program.player2!.habilityCooldown - (DateTime.Now - Program.player2!.lastUseHability)).Seconds + 1;
+        int cooldown1 = (Program.player1!.HabilityCooldown - (DateTime.Now - Program.player1!.LastUseHability)).Seconds + 1;
+        int cooldown2 = (Program.player2!.HabilityCooldown - (DateTime.Now - Program.player2!.LastUseHability)).Seconds + 1;
 
-        var cooldownText1 = $" Cooldown: { (DateTime.Now - Program.player1.lastUseHability > Program.player1.habilityCooldown ? "Ready" : $"{cooldown1}")}";
-        var cooldownText2 = $" Cooldown: { (DateTime.Now - Program.player2.lastUseHability > Program.player2.habilityCooldown ? "Ready" : $"{cooldown2}")}";
+        var cooldownText1 = $" Cooldown: { (DateTime.Now - Program.player1.LastUseHability > Program.player1.HabilityCooldown ? "Ready" : $"{cooldown1}")}";
+        var cooldownText2 = $" Cooldown: { (DateTime.Now - Program.player2.LastUseHability > Program.player2.HabilityCooldown ? "Ready" : $"{cooldown2}")}";
 
-        Console.WriteLine($"P1 ({Program.player1.Name}) H: {Program.player1!.health} D: {Program.player1!.damage} {cooldownText1}");
-        Console.WriteLine($"P2 ({Program.player2.Name}) H: {Program.player2!.health} D: {Program.player2!.damage} {cooldownText2}");
+        Console.WriteLine($"P1 ({Program.player1.Name}) H: {Program.player1!.Health} D: {Program.player1!.Damage} {cooldownText1}");
+        Console.WriteLine($"P2 ({Program.player2.Name}) H: {Program.player2!.Health} D: {Program.player2!.Damage} {cooldownText2}");
     }
 
     private static string VerifyPosition(int x, int y)
     {
         if (Program.player1!.x == x && Program.player1.y == y)
         {
-            return $"{Program.player1.color}{Program.player1.Apparence}{ConsoleHelper.ResetColor}";
+            return $"{Program.player1.Color}{Program.player1.Apparence}{ConsoleHelper.ResetColor}";
         }
         if (Program.player2!.x == x && Program.player2.y == y)
         {
-            return $"{Program.player2.color}{Program.player2.Apparence}{ConsoleHelper.ResetColor}";
+            return $"{Program.player2.Color}{Program.player2.Apparence}{ConsoleHelper.ResetColor}";
         }
         return ".";
     }

@@ -5,13 +5,13 @@ namespace dojo.BaseContent
     {   
         public Knight()
         {
-            habilityCooldown = TimeSpan.FromSeconds(6);
+            HabilityCooldown = TimeSpan.FromSeconds(6);
         }
         public override void Hability()
         {
-            if (Functions.CanAttack(this, otherPlayer!, 1, 1))
+            if (Functions.CanAttack(this, OtherPlayer!, 1, 1))
             {    
-                otherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { damage = damage * 2, attacker = this });
+                OtherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { Damage = Damage * 2, attacker = this });
             }
         }
     }

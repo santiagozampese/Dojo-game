@@ -25,5 +25,29 @@ namespace dojo.API
             }
             return false;
         }
+        public static void Weaken(Player player, int value, int min = 2)
+        {
+            if (player.Damage - value <= min)
+            {
+                player.Damage = min;
+                return;
+            }
+
+            player.Damage -= value;
+        }
+        public static void Strengthen(Player player, int value, int max = -1)
+        {   
+            if (max < 0)
+            {
+                max = player.BaseDamage * 2;
+            }
+            if (player.Damage + value > max)
+            {
+                player.Damage = max;
+                return;
+            }
+
+            player.Damage += value;
+        }
     }
 }

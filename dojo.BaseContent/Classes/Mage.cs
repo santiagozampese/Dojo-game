@@ -5,15 +5,15 @@ namespace dojo.BaseContent
     {
         public Mage()
         {
-            health = 80;
-            damage = 8;
-            habilityCooldown = TimeSpan.FromSeconds(4);
+            BaseHealth = 80;
+            BaseDamage = 8;
+            HabilityCooldown = TimeSpan.FromSeconds(4);
         }
         public override void Hability()
         {
-            if (Functions.CanAttack(this, otherPlayer!, 12, 12, false))
+            if (Functions.CanAttack(this, OtherPlayer!, 12, 12, false))
             {    
-                otherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { damage = damage, attacker = this });
+                OtherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { Damage = Damage, attacker = this });
             }
         }
     }

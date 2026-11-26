@@ -5,7 +5,7 @@ public class Ninja : Player
 {
    public Ninja()
    {
-      habilityCooldown = TimeSpan.FromSeconds(8);
+      HabilityCooldown = TimeSpan.FromSeconds(8);
    }
    public override void Hability()
    {

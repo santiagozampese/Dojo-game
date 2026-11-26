@@ -4,23 +4,27 @@ namespace dojo.API
 {
     public class Player
     {
-        public DateTime lastUseHability = DateTime.MinValue;
-        public TimeSpan habilityCooldown = TimeSpan.FromSeconds(5);
-        public DateTime lastAttack = DateTime.MinValue;
-        public TimeSpan attackCooldown = TimeSpan.FromSeconds(1);
+        public DateTime LastUseHability = DateTime.MinValue;
+        public TimeSpan HabilityCooldown = TimeSpan.FromSeconds(5);
+        public DateTime LastAttack = DateTime.MinValue;
+        public TimeSpan AttackCooldown = TimeSpan.FromSeconds(1);
         public string Name {get; set;} = "";
-        public int playerNumber = 0;
-        public Player? otherPlayer {get; private set;}
-        public int health { get; set; } = 100;
-        public int damage { get; set; } = 10;
-        public char direction { get; set; } = 'u';
+        public int PlayerNumber = 0;
+        public Player? OtherPlayer {get; private set;}
+
+        public int BaseHealth { get; set; } = 100;
+        public int BaseDamage { get; set; } = 10;
+        public int Health { get; set; }
+        public int Damage { get; set; }
+        public char Direction { get; set; } = 'u';
         public int x {get; set;}
         public int y {get; set;}
         public char Apparence {get; set;} = '@';
-        public string color {get; set;} = "";
+        public string Color {get; set;} = "";
 
         public EventHandler<HitEventArgs>? OnHit;
-        protected IGameContext Context {get; private set;}
+        protected IGameContext? Context {get; private set;}
+
         public void SetContext(IGameContext context)
         {
             Context = context;
@@ -31,18 +35,18 @@ namespace dojo.API
 
         public virtual void Attack()
         {
-            if (DateTime.Now - lastAttack >= attackCooldown)
+            if (DateTime.Now - LastAttack >= AttackCooldown)
             {
-                lastAttack = DateTime.Now;
-                otherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { damage = damage, attacker = this});
+                LastAttack = DateTime.Now;
+                OtherPlayer!.OnHit!.Invoke(this, new HitEventArgs() { Damage = Damage, attacker = this});
             }
         }
 
         public bool TryUseHability()
         {
-            if (DateTime.Now - lastUseHability >= habilityCooldown)
+            if (DateTime.Now - LastUseHability >= HabilityCooldown)
             {
-                lastUseHability = DateTime.Now;
+                LastUseHability = DateTime.Now;
                 Hability();
                 return true;
             }
@@ -53,34 +57,34 @@ namespace dojo.API
         {
             try
             {
-               if (playerNumber == 2)
-               {
-                   otherPlayer = Context.Player1;
-               }
-               else if (playerNumber == 1)
-               {
-                   otherPlayer = Context.Player2;
-               }
+                Health = BaseHealth;
+                Damage = BaseDamage;
 
-               color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
-               while (color == otherPlayer!.color)
-               {
-                   color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
-               }
+                if (PlayerNumber == 2)
+                {
+                    OtherPlayer = Context.Player1;
+                }
+                else if (PlayerNumber == 1)
+                {
+                    OtherPlayer = Context.Player2;
+                }
 
-               OnHit += (sender, e) =>
-               {
-                   if (e.attacker == null) return;
-                   health -= e.damage;
-               };
+                Color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
+                while (Color == OtherPlayer!.Color)
+                {
+                    Color = ConsoleHelper.colors[new Random().Next(0, ConsoleHelper.colors.Length)];
+                }
+
+                OnHit += (sender, e) =>
+                {
+                    if (e.attacker == null) return;
+                    Health -= e.Damage;
+                };
             }
             catch (Exception e)
             {
-               Console.WriteLine($"Error in player {playerNumber} config: {e.Message}");
+                Console.WriteLine($"Error in player {PlayerNumber} config: {e.Message}");
             }
-        }
-        public Player()
-        {
         }
 
         public void Up()
@@ -88,7 +92,7 @@ namespace dojo.API
             if (y > 0)
             {
                 y--;
-                direction = 'u';
+                Direction = 'u';
             }
         }
         public void Down()
@@ -96,7 +100,7 @@ namespace dojo.API
             if (y + 1 < Context.MapHeight)
             {
                 y++;
-                direction = 'd';
+                Direction = 'd';
             }
         }
         public void Right()
@@ -104,7 +108,7 @@ namespace dojo.API
             if (x + 1 < Context.MapWidth)
             {
                 x++;
-                direction = 'r';
+                Direction = 'r';
             }
         }
         public void Left()
@@ -112,14 +116,14 @@ namespace dojo.API
             if (x > 0)
             {
                 x--;
-                direction = 'l';
+                Direction = 'l';
             }
         }
     }
 
     public class HitEventArgs : EventArgs
     {
-        public int damage { get; set; }
+        public int Damage { get; set; }
         public Player? attacker { get; set; }
     }
     
